@@ -1,15 +1,16 @@
-﻿// Начало разработки
+﻿using MinDistanceFounder;
 
 string fileName = " ";
 Console.WriteLine("Введите название файла");
+Console.WriteLine("Файл должен находиться в папке files текущего проекта");
+
 fileName = Console.ReadLine();
+int n = 10;
 
 double fuelConsumption;
 Console.WriteLine("Введите расход топлива в литрах на 100км пути");
 fuelConsumption =  double.Parse( Console.ReadLine() );
 
-double[] vertexes = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-double[] lines = { 0.94, 0.66, 1.04, 0.77, 1.92, 1.7, 1.52, 0.86, 1.54, 0.53, 1.2, 1.88};
 
 double[,] mapGraph = {
 
@@ -25,16 +26,18 @@ double[,] mapGraph = {
     {10000,     10000,     10000,     10000,       10000,   1.52,      10000,  10000,       0.86,  0}
 };
 
-int n = 10;
+
 
 while (true)
 {
+
     string input;
     bool isValild = false;
     int firstPoint;
     int secondPoint;
 
-    double[,] shortWays = Floyd(mapGraph);
+    WaysFounder founder = new WaysFounder();
+    double[,] shortWays = founder.Floyd(mapGraph);
 
 
     Console.WriteLine("Введите первую точку");
@@ -71,21 +74,8 @@ while (true)
     isValild = false;
 
 
-    double result = shortWays[firstPoint - 1, secondPoint - 1];
-    Console.WriteLine("Кратчайший путь между точками: " + result);
+    double result = founder.DistanceFounder(shortWays, firstPoint, secondPoint);
+    Console.WriteLine("Кратчайший путь между точками: " + result + "км");
     Console.WriteLine("Расход топлива: " + result * (fuelConsumption / 100) + " литров");
 }
 
-
-//Функция для нахождения кратчайших путей
-double[,] Floyd(double[,] a)
-{
-    double[,] d = new double[n, n];
-    d = (double[,])a.Clone();
-    for (int i = 1; i <= n; i++)
-        for (int j = 0; j <= n - 1; j++)
-            for (int k = 0; k <= n - 1; k++)
-                if (d[j, k] > d[j, i - 1] + d[i - 1, k])
-                    d[j, k] = d[j, i - 1] + d[i - 1, k];
-    return d;
-}
