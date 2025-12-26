@@ -1,0 +1,24 @@
+name: CoolAppWorkflow
+
+on: 
+  push:
+    branches: 
+    - develop
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Build project
+      run: dotnet build app/MinDistanceFounder/MinDistanceFounder.csproj
+
+  test:
+    needs: build
+    runs-on: windows-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Run tests for release build
+      run: dotnet test app/MinDistanceFounderTest/MinDistanceFounderTest.csproj
